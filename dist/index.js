@@ -1,9 +1,10 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -12,12 +13,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
  * Features: index
  */
 const core_1 = require("./core");
-let instance;
 class Mint extends core_1.Tree {
     // 是否替换原文本敏感词
     constructor(keywords) {
-        if (instance)
-            return instance;
         super();
         if (!(keywords instanceof Array && keywords.length >= 1)) {
             console.error('mint-filter：未将过滤词数组传入！');
@@ -30,7 +28,6 @@ class Mint extends core_1.Tree {
             this.insert(item.toLocaleUpperCase());
         }
         this._createFailureTable();
-        instance = this;
     }
     _filterFn(word, every = false, replace = true) {
         let startIndex = 0;
